@@ -11,7 +11,17 @@ beforeEach(() => {
 afterAll(() => {
   return db.end();
 });
-
+describe("Error Handling", () => {
+  it("404: responds with a message when sent a valid but non-existent path", () => {
+    return request(app)
+      .get("/api/not-a-real-path")
+      .expect(404)
+      .then((response) => {
+        const serverResponseMessage = response.body.msg;
+        expect(serverResponseMessage).toBe("URL not found");
+      });
+  });
+});
 describe("app", () => {
   describe("/api/topics", () => {
     it("Each Array object should match the expected result", () => {
@@ -29,18 +39,27 @@ describe("app", () => {
           });
         });
     });
-
-    describe("Error Handling", () => {
-      it("404: responds with a message when sent a valid but non-existent path", () => {
-        return request(app)
-          .get("/api/not-a-real-path")
-          .expect(404)
-          .then((response) => {
-            // console.log(response);
-            const serverResponseMessage = response.body.msg;
-            expect(serverResponseMessage).toBe("URL not found");
+  });
+  describe("/api/articles", () => {
+    it("Should respond with an array of article objects with the expected properties", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const articleArr = response.body.articles;
+          console.log(response.body.articles);
+          articleArr.forEach((articleObj) => {
+            expect(articleObj).toMatchObject({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+            });
           });
-      });
+        });
     });
   });
 });
