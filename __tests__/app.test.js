@@ -47,16 +47,17 @@ describe("app", () => {
         .expect(200)
         .then((response) => {
           const articleArr = response.body.articles;
-          console.log(response.body.articles);
+          console.log(articleArr);
           articleArr.forEach((articleObj) => {
             expect(articleObj).toMatchObject({
+              author: expect.any(String),
               article_id: expect.any(Number),
               title: expect.any(String),
               topic: expect.any(String),
-              body: expect.any(String),
               created_at: expect.any(String),
               votes: expect.any(Number),
               article_img_url: expect.any(String),
+              comment_count: expect.any(String),
             });
           });
         });
