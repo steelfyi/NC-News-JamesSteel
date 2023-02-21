@@ -47,7 +47,7 @@ describe("app", () => {
         .expect(200)
         .then((response) => {
           const articleArr = response.body.articles;
-          console.log(articleArr);
+
           articleArr.forEach((articleObj) => {
             expect(articleObj).toMatchObject({
               author: expect.any(String),

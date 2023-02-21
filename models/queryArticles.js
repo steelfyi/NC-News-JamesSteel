@@ -11,7 +11,6 @@ const queryArticles = () => {
      `
     )
     .then((results) => {
-      console.log(results, "These are your SQL results");
       return results.rows;
     });
 };
