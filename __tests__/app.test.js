@@ -3,6 +3,7 @@ const app = require("../app.js"); // my news app
 const db = require("../db/connection.js"); // my database file points to connection.js which will choose dev or test respectively
 const seed = require("../db/seeds/seed"); // required in my seed file
 const data = require("../db/data/test-data/index.js");
+const sorted = require("jest-sorted");
 // // using these to load seed and end DB connection respectively
 beforeEach(() => {
   return seed(data); // you need to invoke seed with your SEED DATA inside
@@ -41,7 +42,7 @@ describe("app", () => {
     });
   });
   describe("/api/articles", () => {
-    it("Should respond with an array of article objects with the expected properties", () => {
+    it("200 - GET: respond with an array of article objects with the expected properties", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -62,5 +63,19 @@ describe("app", () => {
           });
         });
     });
+    it("200 - GET: should order created date descending", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const responseArr = response.body.articles;
+          expect(responseArr).toBeSorted({
+            key: "created_at",
+            descending: "true",
+          });
+        });
+    });
   });
 });
+
+//writing somehting new to test git
