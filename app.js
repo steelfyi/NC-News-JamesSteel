@@ -3,6 +3,7 @@ const app = express(); // initalising express to app variable
 const db = require("./db/connection");
 const getTopics = require("./controllers/getTopics.js");
 const getArticles = require("./controllers/getArticles.js");
+const getArticleByID = require("./controllers/getArticleByID.js");
 
 const { handle404s } = require("./controllers/errorHandling");
 
@@ -11,6 +12,8 @@ const { handle404s } = require("./controllers/errorHandling");
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
+
+app.get("/api/articles/:article_id", getArticleByID);
 
 app.use(handle404s);
 

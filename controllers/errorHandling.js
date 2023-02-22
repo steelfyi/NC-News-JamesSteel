@@ -3,7 +3,6 @@ const handle404s = (req, res, next) => {
 };
 
 const handleServerErrors = (req, res, next) => {
-  console.log(err);
   res.status(500).send({ msg: "hi Internal Server Error" });
 };
 

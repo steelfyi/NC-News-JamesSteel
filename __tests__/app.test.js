@@ -76,6 +76,36 @@ describe("app", () => {
         });
     });
   });
-});
+  describe("/api/articles/:article_id", () => {
+    it("200 - GET: respond with an article object with the expected properties", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+          const articleArrObj = response.body.article;
 
-//writing somehting new to test git
+          articleArrObj.forEach((articleObj) => {
+            expect(articleObj).toMatchObject({
+              author: expect.any(String),
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+            });
+          });
+        });
+    });
+  });
+  describe("/api/articles/999", () => {
+    it("404 - GET: Should respond with not found obj if queried with non existent id", () => {
+      return request(app)
+        .get("/api/articles/999")
+        .expect(404)
+        .then((response) => {
+          expect
+        });
+    });
+  });
+});
