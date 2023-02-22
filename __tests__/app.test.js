@@ -3,6 +3,7 @@ const app = require("../app.js"); // my news app
 const db = require("../db/connection.js"); // my database file points to connection.js which will choose dev or test respectively
 const seed = require("../db/seeds/seed"); // required in my seed file
 const data = require("../db/data/test-data/index.js");
+const sorted = require("jest-sorted");
 // // using these to load seed and end DB connection respectively
 beforeEach(() => {
   return seed(data); // you need to invoke seed with your SEED DATA inside
@@ -11,7 +12,17 @@ beforeEach(() => {
 afterAll(() => {
   return db.end();
 });
-
+describe("Error Handling", () => {
+  it("404: responds with a message when sent a valid but non-existent path", () => {
+    return request(app)
+      .get("/api/not-a-real-path")
+      .expect(404)
+      .then((response) => {
+        const serverResponseMessage = response.body.msg;
+        expect(serverResponseMessage).toBe("URL not found");
+      });
+  });
+});
 describe("app", () => {
   describe("/api/topics", () => {
     it("Each Array object should match the expected result", () => {
@@ -29,18 +40,42 @@ describe("app", () => {
           });
         });
     });
+  });
+  describe("/api/articles", () => {
+    it("200 - GET: respond with an array of article objects with the expected properties", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const articleArr = response.body.articles;
 
-    describe("Error Handling", () => {
-      it("404: responds with a message when sent a valid but non-existent path", () => {
-        return request(app)
-          .get("/api/not-a-real-path")
-          .expect(404)
-          .then((response) => {
-            // console.log(response);
-            const serverResponseMessage = response.body.msg;
-            expect(serverResponseMessage).toBe("URL not found");
+          articleArr.forEach((articleObj) => {
+            expect(articleObj).toMatchObject({
+              author: expect.any(String),
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String),
+            });
           });
-      });
+        });
+    });
+    it("200 - GET: should order created date descending", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const responseArr = response.body.articles;
+          expect(responseArr).toBeSorted({
+            key: "created_at",
+            descending: "true",
+          });
+        });
     });
   });
 });
+
+//writing somehting new to test git
