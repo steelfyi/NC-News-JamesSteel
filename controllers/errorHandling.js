@@ -3,6 +3,8 @@ const errorHandling = (err, req, res, next) => {
     return res.status(400).send({ msg: "bad request" });
   } else if (err.status === 404) {
     return res.status(404).send({ msg: err.message });
+  } else if (err.status === 200) {
+    return res.status(200).send({ msg: err.message });
   } else return res.status(500).send({ msg: "Internal Server Error" });
 };
 

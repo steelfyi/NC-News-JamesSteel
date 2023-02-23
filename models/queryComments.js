@@ -9,7 +9,7 @@ const queryComments = (articleID) => {
   return db.query(formatQuery).then((results) => {
     if (results.rows.length === 0) {
       const err = new Error("Comment not found");
-      err.status = 404;
+      err.status = 200;
       throw err;
     }
     return results.rows;

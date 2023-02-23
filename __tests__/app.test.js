@@ -155,8 +155,25 @@ describe("200 - GET: /api/articles/:article_id/comments", () => {
   it("Should respond with not found obj if queried with a valid yet non existent id", () => {
     return request(app)
       .get("/api/articles/999/comments")
-      .expect(404)
+      .expect(200)
       .then((response) => {
+        expect(response.body).toEqual({ msg: "Comment not found" });
+      });
+  });
+  it("Should respond with an empty array if queried with a invalid id", () => {
+    return request(app)
+      .get("/api/articles/not-an-id/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "bad request" });
+      });
+  });
+  it("Should respond with an empty array if queried with an existing id with no comments", () => {
+    return request(app)
+      .get("/api/articles/36/comments")
+      .expect(200)
+      .then((response) => {
+        console.log(response.body);
         expect(response.body).toEqual({ msg: "Comment not found" });
       });
   });
