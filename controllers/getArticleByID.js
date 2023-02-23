@@ -8,7 +8,7 @@ const getArticleByID = (req, res, next) => {
       return res.status(200).send({ article });
     })
     .catch((err) => {
-      return next(err);
+      next(err);
     });
 };
 

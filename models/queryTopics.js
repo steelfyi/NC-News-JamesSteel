@@ -7,6 +7,4 @@ const queryTopics = () => {
   });
 };
 
-// just remembered use format to pass your sql in and then you can sort by check mdn
-
 module.exports = queryTopics;

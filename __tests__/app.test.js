@@ -18,8 +18,7 @@ describe("Error Handling", () => {
       .get("/api/not-a-real-path")
       .expect(404)
       .then((response) => {
-        const serverResponseMessage = response.body.msg;
-        expect(serverResponseMessage).toBe("URL not found");
+        expect(response.body.msg).toBe("path not found");
       });
   });
 });
