@@ -99,12 +99,22 @@ describe("app", () => {
     });
   });
   describe("/api/articles/999", () => {
-    it("404 - GET: Should respond with not found obj if queried with non existent id", () => {
+    it("404 - GET: Should respond with not found obj if queried with a valid yet non existent id", () => {
       return request(app)
         .get("/api/articles/999")
         .expect(404)
         .then((response) => {
-          expect
+          expect(response.body).toEqual({ msg: "article_id not found" });
+        });
+    });
+  });
+  describe("/api/articles/nickiminaj", () => {
+    it("400 - GET: should respond with bad request when queried with invalid characters", () => {
+      return request(app)
+        .get("/api/articles/nickiminaj")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "bad request" });
         });
     });
   });
