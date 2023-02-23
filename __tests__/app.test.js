@@ -86,7 +86,7 @@ describe("app", () => {
           articleArrObj.forEach((articleObj) => {
             expect(articleObj).toMatchObject({
               author: expect.any(String),
-              article_id: expect.any(Number),
+              article_id: expect(1),
               title: expect.any(String),
               topic: expect.any(String),
               created_at: expect.any(String),
