@@ -83,38 +83,40 @@ describe("app", () => {
         .then((response) => {
           const articleArrObj = response.body.article;
 
-          articleArrObj.forEach((articleObj) => {
-            expect(articleObj).toMatchObject({
-              author: expect.any(String),
-              article_id: expect(1),
-              title: expect.any(String),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              article_img_url: expect.any(String),
-            });
-          });
+          expect(articleArrObj).toMatchObject([
+            {
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            },
+          ]);
         });
     });
   });
-  describe("/api/articles/999", () => {
-    it("404 - GET: Should respond with not found obj if queried with a valid yet non existent id", () => {
-      return request(app)
-        .get("/api/articles/999")
-        .expect(404)
-        .then((response) => {
-          expect(response.body).toEqual({ msg: "article_id not found" });
-        });
-    });
+});
+describe("/api/articles/999", () => {
+  it("404 - GET: Should respond with not found obj if queried with a valid yet non existent id", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "article_id not found" });
+      });
   });
-  describe("/api/articles/nickiminaj", () => {
-    it("400 - GET: should respond with bad request when queried with invalid characters", () => {
-      return request(app)
-        .get("/api/articles/nickiminaj")
-        .expect(400)
-        .then((response) => {
-          expect(response.body).toEqual({ msg: "bad request" });
-        });
-    });
+});
+describe("/api/articles/nickiminaj", () => {
+  it("400 - GET: should respond with bad request when queried with invalid characters", () => {
+    return request(app)
+      .get("/api/articles/nickiminaj")
+      .expect(400)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "bad request" });
+      });
   });
 });

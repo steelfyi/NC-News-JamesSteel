@@ -1,5 +1,4 @@
 const errorHandling = (err, req, res, next) => {
-  console.log(err, "<<<<<<<<Error");
   if (err.code === "22P02") {
     return res.status(400).send({ msg: "bad request" });
   } else if (err.status === 404) {
