@@ -106,7 +106,7 @@ describe("404 - GET: /api/articles/999", () => {
       .get("/api/articles/999")
       .expect(404)
       .then((response) => {
-        expect(response.body).toEqual({ msg: "article_id not found" });
+        expect(response.body).toEqual({ msg: "Article not found" });
       });
   });
 });
@@ -123,11 +123,11 @@ describe("400 - GET: /api/articles/nickiminaj", () => {
 describe("200 - GET: /api/articles/:article_id/comments", () => {
   it("should return an array of comments with that comment ID ordered by created date descending", () => {
     return request(app)
-      .get("/api/articles/2/comments")
+      .get("/api/articles/1/comments")
       .expect(200)
       .then((response) => {
         const commentsArr = response.body.comments;
-        console.log(commentsArr, "<<<Comments ARR in test");
+
         expect(commentsArr).toBeSorted({
           key: "created_at",
           descending: "true",
@@ -136,7 +136,7 @@ describe("200 - GET: /api/articles/:article_id/comments", () => {
   });
   it("Should respond with an array of objects matching expected properties", () => {
     return request(app)
-      .get("/api/articles/18/comments")
+      .get("/api/articles/1/comments")
       .expect(200)
       .then((response) => {
         const commentsArr = response.body.comments;
@@ -147,9 +147,17 @@ describe("200 - GET: /api/articles/:article_id/comments", () => {
             created_at: expect.any(String),
             author: expect.any(String),
             body: expect.any(String),
-            article_id: 18,
+            article_id: 1,
           });
         });
+      });
+  });
+  it("Should respond with not found obj if queried with a valid yet non existent id", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "Comment not found" });
       });
   });
 });

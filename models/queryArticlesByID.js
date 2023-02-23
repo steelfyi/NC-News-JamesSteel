@@ -9,6 +9,7 @@ const queryArticlesByID = (articleID, next) => {
   return db
     .query(queryID)
     .then((results) => {
+      
       if (results.rows.length === 0) {
         const err = new Error("Article not found");
         err.status = 404;
