@@ -1,13 +1,10 @@
-const handle404s = (req, res, next) => {
-  res.status(404).send({ msg: "URL not found" });
+const errorHandling = (err, req, res, next) => {
+  console.log(err, "<<<<<<<<Error");
+  if (err.code === "22P02") {
+    return res.status(400).send({ msg: "bad request" });
+  } else if (err.status === 404) {
+    return res.status(404).send({ msg: "article_id not found" });
+  } else return res.status(500).send({ msg: "Internal Server Error" });
 };
 
-const handleServerErrors = (req, res, next) => {
-  console.log(err);
-  res.status(500).send({ msg: "hi Internal Server Error" });
-};
-
-module.exports = {
-  handle404s,
-  handleServerErrors,
-};
+module.exports = errorHandling;
