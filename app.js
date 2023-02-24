@@ -5,6 +5,9 @@ const getArticles = require("./controllers/getArticles.js");
 const getArticleByID = require("./controllers/getArticleByID.js");
 const getComments = require("./controllers/getComments");
 const errorHandling = require("./controllers/errorHandling");
+const postComments = require("./controllers/postComments");
+
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
@@ -13,6 +16,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleByID);
 
 app.get("/api/articles/:article_id/comments", getComments);
+
+app.post("/api/articles/:article_id/comments", postComments);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "path not found" });
