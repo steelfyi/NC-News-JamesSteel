@@ -1,12 +1,12 @@
-const request = require("supertest"); //required supertest as it facilitates the testing of the endpoints
-const app = require("../app.js"); // my news app
-const db = require("../db/connection.js"); // my database file points to connection.js which will choose dev or test respectively
-const seed = require("../db/seeds/seed"); // required in my seed file
+const request = require("supertest");
+const app = require("../app.js");
+const db = require("../db/connection.js");
+const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index.js");
 const sorted = require("jest-sorted");
-// // using these to load seed and end DB connection respectively
+
 beforeEach(() => {
-  return seed(data); // you need to invoke seed with your SEED DATA inside
+  return seed(data);
 });
 
 afterAll(() => {
@@ -110,7 +110,7 @@ describe("404 - GET: /api/articles/999", () => {
       });
   });
 });
-describe("400 - GET: /api/articles/nickiminaj", () => {
+describe("400 - GET: /api/articles/not-a-valid-id", () => {
   it("should respond with bad request when queried with invalid characters", () => {
     return request(app)
       .get("/api/articles/nickiminaj")
@@ -173,9 +173,120 @@ describe("200 - GET: /api/articles/:article_id/comments", () => {
       .get("/api/articles/7/comments")
       .expect(200)
       .then((response) => {
-        console.log(response.body);
         expect(response.body).toEqual({ comments: [] });
-        // expect(response.body).toEqual({ msg: "Comment not found" });
       });
+  });
+});
+
+// YOUR TESTS
+describe("200 - POST: /api/articles/:article_id/comments", () => {
+  it("should return posted comment", () => {
+    const data = {
+      username: "butter_bridge",
+      body: "Your article is not very good you shouldnt be a journalist",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(data)
+      .expect(201)
+      .then((response) => {
+        const commentObj = response.body.comment;
+
+        expect(commentObj).toEqual({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: "butter_bridge",
+          body: "Your article is not very good you shouldnt be a journalist",
+          article_id: 1,
+        });
+      });
+  });
+
+  it("should respond with bad request when queried with invalid character", () => {
+    const data = {
+      username: "butter_bridge",
+      body: "Your article is not very good you shouldnt be a journalist",
+    };
+    return request(app)
+      .post("/api/articles/not-a-valid-id/comments")
+      .send(data)
+      .expect(400)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "bad request" });
+      });
+  });
+  it("Should respond with not found obj if queried with a valid yet non existent id", () => {
+    const data = {
+      username: "butter_bridge",
+      body: "Your article is not very good you shouldnt be a journalist",
+    };
+    return request(app)
+      .post("/api/articles/999999/comments")
+      .send(data)
+      .expect(404)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "Article not found" });
+      });
+  });
+  it("201  - ignores any unnecessary properties if sent on the request", () => {
+    const data = {
+      username: "butter_bridge",
+      body: "Your article is not very good you shouldnt be a journalist",
+      secret: "my name is james",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(data)
+      .expect(201)
+      .then((response) => {
+        const commentObj = response.body.comment;
+
+        expect(commentObj).toEqual({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: "butter_bridge",
+          body: "Your article is not very good you shouldnt be a journalist",
+          article_id: 1,
+        });
+      });
+  });
+  it("404s when username doesn't exist", () => {
+    const data = {
+      username: "butter_bridge",
+      body: "Your article is not very good you shouldnt be a journalist",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(data)
+      .expect(201)
+      .then((response) => {
+        const commentObj = response.body.comment;
+
+        expect(commentObj).toEqual({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: "butter_bridge",
+          body: "Your article is not very good you shouldnt be a journalist",
+          article_id: 1,
+        });
+      });
+  });
+  it("400 request does not have a username or body property", () => {
+    const data = {
+      notusername: "butter_bridge",
+      notbody: "Your article is not very good you shouldnt be a journalist",
+    };
+    return (
+      request(app)
+        .post("/api/articles/1/comments")
+        .send(data)
+        // .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "bad request" });
+        })
+    );
   });
 });
