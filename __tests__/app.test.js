@@ -225,7 +225,6 @@ describe("201 - POST: /api/articles/:article_id/comments", () => {
       .send(data)
       .expect(404)
       .then((response) => {
-        console.log(response.body);
         expect(response.body).toEqual({ msg: "resource not found" });
       });
   });
