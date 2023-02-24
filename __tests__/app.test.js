@@ -178,8 +178,7 @@ describe("200 - GET: /api/articles/:article_id/comments", () => {
   });
 });
 
-// YOUR TESTS
-describe("200 - POST: /api/articles/:article_id/comments", () => {
+describe("201 - POST: /api/articles/:article_id/comments", () => {
   it("should return posted comment", () => {
     const data = {
       username: "butter_bridge",
@@ -226,7 +225,8 @@ describe("200 - POST: /api/articles/:article_id/comments", () => {
       .send(data)
       .expect(404)
       .then((response) => {
-        expect(response.body).toEqual({ msg: "Article not found" });
+        console.log(response.body);
+        expect(response.body).toEqual({ msg: "resource not found" });
       });
   });
   it("201  - ignores any unnecessary properties if sent on the request", () => {
@@ -254,39 +254,28 @@ describe("200 - POST: /api/articles/:article_id/comments", () => {
   });
   it("404s when username doesn't exist", () => {
     const data = {
-      username: "butter_bridge",
+      username: "james",
       body: "Your article is not very good you shouldnt be a journalist",
     };
     return request(app)
       .post("/api/articles/1/comments")
       .send(data)
-      .expect(201)
+      .expect(404)
       .then((response) => {
-        const commentObj = response.body.comment;
-
-        expect(commentObj).toEqual({
-          comment_id: expect.any(Number),
-          votes: expect.any(Number),
-          created_at: expect.any(String),
-          author: "butter_bridge",
-          body: "Your article is not very good you shouldnt be a journalist",
-          article_id: 1,
-        });
+        expect(response.body).toEqual({ msg: "resource not found" });
       });
   });
-  it("400 request does not have a username or body property", () => {
-    const data = {
-      notusername: "butter_bridge",
-      notbody: "Your article is not very good you shouldnt be a journalist",
-    };
-    return (
-      request(app)
-        .post("/api/articles/1/comments")
-        .send(data)
-        // .expect(400)
-        .then((response) => {
-          expect(response.body).toEqual({ msg: "bad request" });
-        })
-    );
-  });
+});
+it("400 request does not have a username or body property", () => {
+  const data = {
+    notusername: "butter_bridge",
+    notbody: "Your article is not very good you shouldnt be a journalist",
+  };
+  return request(app)
+    .post("/api/articles/1/comments")
+    .send(data)
+    .expect(400)
+    .then((response) => {
+      expect(response.body).toEqual({ msg: "bad request" });
+    });
 });
