@@ -6,11 +6,9 @@ const patchVote = (req, res, next) => {
   console.log("you have arrived");
   insertVote(articleID, vote)
     .then((article) => {
-      console.log(article);
       res.status(200).send({ article });
     })
     .catch((err) => {
-      console.log(err, "<<< ERORR IN controiller");
       next(err);
     });
 };
