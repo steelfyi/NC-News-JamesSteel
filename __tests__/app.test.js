@@ -376,7 +376,23 @@ describe("9. GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((response) => {
-        expect(typeof response).toBe("array");
+        // console.log(response.body.users);
+        // expect(typeof response.body.users).toBe("array");
+      });
+  });
+  it("Should be an object that has the expected properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const usersArr = response.body.users;
+        usersArr.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });

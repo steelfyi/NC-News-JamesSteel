@@ -1,6 +1,6 @@
 const queryArticles = require("../models/queryArticles");
 
-const getArticles = (req, res) => {
+const getArticles = (req, res, next) => {
   queryArticles()
     .then((articles) => {
       res.status(200).send({ articles });
