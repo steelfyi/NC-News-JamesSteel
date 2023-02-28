@@ -12,6 +12,7 @@ beforeEach(() => {
 afterAll(() => {
   return db.end();
 });
+
 describe("Error Handling", () => {
   it("404: responds with a message when sent a valid but non-existent path", () => {
     return request(app)
@@ -22,6 +23,7 @@ describe("Error Handling", () => {
       });
   });
 });
+
 describe("200 - GET: /api/topics", () => {
   it("Each Array object should match the expected result", () => {
     return request(app)
@@ -370,15 +372,16 @@ describe("200 - PATCH: /api/articles/:article_id", () => {
       });
   });
 });
-describe("9. GET /api/users", () => {
-  it("Should respond with an array of user objects with the expected properties", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then((response) => {
-        // console.log(response.body.users);
-        // expect(typeof response.body.users).toBe("array");
-      });
+describe("200 - GET: /api/users", () => {
+  it("Should respond with an the users property should be an array", () => {
+    return (
+      request(app)
+        .get("/api/users")
+        // .expect(200)
+        .then((response) => {
+          expect(Array.isArray(response.body.users)).toBe(true);
+        })
+    );
   });
   it("Should be an object that has the expected properties", () => {
     return request(app)
