@@ -370,3 +370,13 @@ describe("200 - PATCH: /api/articles/:article_id", () => {
       });
   });
 });
+describe("9. GET /api/users", () => {
+  it("Should respond with an array of user objects with the expected properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        expect(typeof response).toBe("array");
+      });
+  });
+});

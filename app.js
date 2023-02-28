@@ -7,6 +7,7 @@ const getComments = require("./controllers/getComments");
 const errorHandling = require("./controllers/errorHandling");
 const postComments = require("./controllers/postComments");
 const patchVote = require("./controllers/patchVote");
+const getUsers = require("./controllers/getUsers");
 
 app.use(express.json());
 
@@ -17,6 +18,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleByID);
 
 app.get("/api/articles/:article_id/comments", getComments);
+
+app.get("/api/users", getUsers);
 
 app.post("/api/articles/:article_id/comments", postComments);
 
