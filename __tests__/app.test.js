@@ -374,14 +374,12 @@ describe("200 - PATCH: /api/articles/:article_id", () => {
 });
 describe("200 - GET: /api/users", () => {
   it("Should respond with an the users property should be an array", () => {
-    return (
-      request(app)
-        .get("/api/users")
-        // .expect(200)
-        .then((response) => {
-          expect(Array.isArray(response.body.users)).toBe(true);
-        })
-    );
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        expect(Array.isArray(response.body.users)).toBe(true);
+      });
   });
   it("Should be an object that has the expected properties", () => {
     return request(app)
@@ -394,6 +392,60 @@ describe("200 - GET: /api/users", () => {
             username: expect.any(String),
             name: expect.any(String),
             avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});
+describe("200 - GET /api/articles (queries)", () => {
+  it("topic, which filters the articles by the topic value specified in the query. If the query is omitted the endpoint should respond with all articles.", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((response) => {
+        const topicsArr = response.body.articles;
+
+        topicsArr.forEach((topic) => {
+          expect(topic).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: "mitch",
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(String),
+          });
+        });
+      });
+  });
+  it("should respond with all articles when no query is provided", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const articleArr = response.body.articles;
+
+        expect(articleArr.length).toBeGreaterThan(0);
+      });
+  });
+  it("sort_by, which sorts the articles by any valid column (defaults to date)", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        const topicsArr = response.body.articles;
+        // duplicate test james
+        topicsArr.forEach((topic) => {
+          expect(topic).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: "cats",
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(String),
           });
         });
       });

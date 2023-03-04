@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const format = require("pg-format");
 
-const queryArticlesByID = (articleID, next) => {
+const queryArticlesByID = (articleID) => {
   const queryID = format(
     `SELECT * FROM articles WHERE article_id = %L;`,
     articleID
