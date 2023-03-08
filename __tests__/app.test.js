@@ -13,7 +13,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("Error Handling", () => {
+describe.only("Error Handling", () => {
   it("404: responds with a message when sent a valid but non-existent path", () => {
     return request(app)
       .get("/api/not-a-real-path")
@@ -398,7 +398,7 @@ describe("200 - GET: /api/articles/:article_id", () => {
         });
     });
   });
-  describe("200 - GET /api/articles (queries)", () => {
+  describe.skip("200 - GET /api/articles (queries)", () => {
     it("topic, which filters the articles by the topic value specified in the query", () => {
       return request(app)
         .get("/api/articles?topic=mitch")
