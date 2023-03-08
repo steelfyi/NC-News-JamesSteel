@@ -1,9 +1,7 @@
 const db = require("../db/connection");
 
-const queryArticles = (req) => {
+const queryArticles = (req, topic, sort_by = "created_at") => {
   let queryParams = [];
-  const topic = req.query.topic;
-  const sort_by = req.query.sort_by;
 
   let queryStr = `
     SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count
@@ -14,17 +12,12 @@ const queryArticles = (req) => {
   if (topic) {
     queryParams.push(topic);
     queryStr += `
-    WHERE articles.topic = $1;`;
-  } else {
-    queryStr += `GROUP BY articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url`;
+    WHERE articles.topic = $1`;
   }
 
   if (sort_by) {
     console.log("you ar ein sortby ");
-    queryStr += ` ORDER BY ${sort_by} DESC;`;
-  } else {
-    queryStr += `
-      ORDER BY created_at DESC;`;
+    queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by};`;
   }
   console.log(queryStr, queryParams);
   return db.query(queryStr, queryParams).then((results) => {
