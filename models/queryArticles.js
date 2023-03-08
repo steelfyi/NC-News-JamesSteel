@@ -16,10 +16,9 @@ const queryArticles = (req, topic, sort_by = "created_at") => {
   }
 
   if (sort_by) {
-    console.log("you ar ein sortby ");
     queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by};`;
   }
-  console.log(queryStr, queryParams);
+
   return db.query(queryStr, queryParams).then((results) => {
     return results.rows;
   });

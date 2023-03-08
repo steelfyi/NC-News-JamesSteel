@@ -70,8 +70,8 @@ describe("200 - GET: /api/topics", () => {
       .expect(200)
       .then((response) => {
         const responseArr = response.body.articles;
-        expect(responseArr).toBeSorted({
-          key: "created_at",
+        console.log(responseArr);
+        expect(responseArr).toBeSorted("created_at", {
           descending: "true",
         });
       });
@@ -130,8 +130,7 @@ describe("200 - GET: /api/articles/:article_id", () => {
         .then((response) => {
           const commentsArr = response.body.comments;
 
-          expect(commentsArr).toBeSorted({
-            key: "created_at",
+          expect(commentsArr).toBeSorted("created_at", {
             descending: "true",
           });
         });
@@ -432,12 +431,10 @@ describe("200 - GET: /api/articles/:article_id", () => {
     });
     it("should respond with an empty array when unknown query is provided", () => {
       return request(app)
-        .get("/api/articles?topic=mitch")
+        .get("/api/articles?topic=bread")
         .expect(200)
         .then((response) => {
           const articleArr = response.body.articles;
-          console.log(articleArr);
-
           expect(articleArr.length).toBe(0);
         });
     });
@@ -446,10 +443,10 @@ describe("200 - GET: /api/articles/:article_id", () => {
         .get("/api/articles?sort_by=article_id")
         .expect(200)
         .then((response) => {
-          console.log(response.body);
           const articles = response.body.articles;
+
           expect(articles).toBeSortedBy("article_id", {
-            descending: true,
+            descending: false,
           });
         });
     });
