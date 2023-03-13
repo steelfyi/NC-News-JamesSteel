@@ -1,5 +1,7 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
+app.use(cors());
 const getTopics = require("./controllers/getTopics.js");
 const getArticles = require("./controllers/getArticles.js");
 const getArticleByID = require("./controllers/getArticleByID.js");
