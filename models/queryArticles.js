@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-const queryArticles = (req, topic, sort_by = "created_at") => {
+const queryArticles = (topic, sort_by = "created_at", order) => {
   let queryParams = [];
 
   let queryStr = `
@@ -16,7 +16,11 @@ const queryArticles = (req, topic, sort_by = "created_at") => {
   }
 
   if (sort_by) {
-    queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by};`;
+    queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by}`;
+  }
+
+  if (order) {
+    queryStr += ` ${order};`;
   }
 
   return db.query(queryStr, queryParams).then((results) => {

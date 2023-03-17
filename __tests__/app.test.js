@@ -70,7 +70,6 @@ describe("200 - GET: /api/topics", () => {
       .expect(200)
       .then((response) => {
         const responseArr = response.body.articles;
-        console.log(responseArr);
         expect(responseArr).toBeSorted("created_at", {
           descending: "true",
         });
@@ -447,6 +446,18 @@ describe("200 - GET: /api/articles/:article_id", () => {
 
           expect(articles).toBeSortedBy("article_id", {
             descending: false,
+          });
+        });
+    });
+    it("order, which can be set to 'asc' or 'desc' for ascending or descending (defaults to descending)", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=desc")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+
+          expect(articles).toBeSortedBy("article_id", {
+            descending: true,
           });
         });
     });

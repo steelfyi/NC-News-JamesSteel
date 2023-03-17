@@ -3,7 +3,9 @@ const queryArticles = require("../models/queryArticles");
 const getArticles = (req, res, next) => {
   const topic = req.query.topic;
   const sort_by = req.query.sort_by;
-  queryArticles(req, topic, sort_by)
+  const order = req.query.order;
+
+  queryArticles(topic, sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })
